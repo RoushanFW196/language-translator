@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>language translator</title>
+    <style>
+        #lang{
+            width:50%;
+            height: 300px;
+        
+            margin: 50px auto;
+            display: flex;
+            gap:50px;
+        }
+     
+        #entertextinput,#outputtext{
+            width: 100%;
+            height: 90%;
+           background-color:black;
+           color:white;
+           font-size:20px;
+           margin-right:20px;
+           padding: 10px;
+          
+        }
+
+     
+    
+.text{
+    text-align: center;
+}
+
+button{
+   background-color:coral;
+   font-size: 15px;
+   color:white;
+   padding: 10px 50px;
+  margin-left: 400px;
+ 
+}
+#lang_option{
+    border:1px solid red;
+    width:50%;
+    margin:auto;
+    background-color:darkgray;
+    color:white;
+    font-size:15px;
+}
+
+    </style>
+</head>
+<body>
+    
+    <h1 class="text">LANGUAGE TRANSLATOR</h1>
+    <div id="lang_option">
+        <p class="text">choose your language</p>
+        <select  id="select"></select>
+    </div>
+
+    <div id="lang">
+
+        <div>
+            <textarea  id="entertextinput" placeholder="Enter your language"cols="30" rows="10"></textarea>
+        </div>
+
+        <div>
+            <textarea id="outputtext" cols="30" placeholder="output language" rows="10"></textarea>
+        </div>
+    </div>
+    
+     <button onclick="translatelanguage()">Translate</button>
+
+
+
+
+
+
+    <script>
+     
+     async function languages(){
+
+        let res =await fetch("https://libretranslate.de/languages");
+        let data = await res.json();
+        console.log(data)
+        appendlanguages(data)
+     }
+
+
+
+
+    languages();
+
+
+     function appendlanguages(data){
+
+
+
+
+     data.forEach(element => {
+         
+        var option=document.createElement("option");
+        option.textContent=element.name
+      //  option.code=element.code;
+      option.setAttribute("value" ,`${element.code}`)
+         document.getElementById("select").append(option)
+
+     });
+
+
+     }
+
+
+
+   
+
+       async function translatelanguage(){
+      
+         var element= document.getElementById("select").value;
+         console.log(element)
+          var text=document.getElementById("entertextinput").value;
+         console.log(text)
+          const res = await fetch("https://libretranslate.de/translate", {
+        	method: "POST",
+ 	 body: JSON.stringify({
+ 		q: `${text}` ,
+ 	 	source: "en",
+ 	 	target: `${element}`
+ 	 }),
+ 	 headers: { "Content-Type": "application/json" }
+       });
+
+       let data= await res.json();
+
+      console.log(data)
+       document.getElementById("outputtext").value=data.translatedText;
+       }
+
+       
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+</body>
+</html>
